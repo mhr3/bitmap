@@ -137,8 +137,7 @@ func (dst Bitmap) Count() int {
 
 	switch hardware {
 	case isAccelerated:
-		var res uint64
-		_count(unsafe.Pointer(&dst[0]), uint64(len(dst)), unsafe.Pointer(&res))
+		res := _count(dst)
 		return int(res)
 	default:
 		return count(dst)

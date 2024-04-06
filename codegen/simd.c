@@ -3,35 +3,40 @@
 
 #include <stdint.h>
 
-void _and_avx512(uint64_t* a, uint64_t* b, uint64_t n) {
+// gocc: _and(a unsafe.Pointer, b unsafe.Pointer, n uint64)
+void _and(uint64_t* a, uint64_t* b, uint64_t n) {
     #pragma clang loop vectorize(enable)
     for (uint64_t i = 0; i < n; ++i) {
         a[i] &= b[i];
     }
 }
 
-void _andn_avx512(uint64_t* a, uint64_t* b, uint64_t n) {
+// gocc: _andn(a unsafe.Pointer, b unsafe.Pointer, n uint64)
+void _andn(uint64_t* a, uint64_t* b, uint64_t n) {
     #pragma clang loop vectorize(enable) interleave(enable)
     for (uint64_t i = 0; i < n; ++i) {
         a[i] &= ~b[i];
     }
 }
 
-void _or_avx512(uint64_t* a, uint64_t* b, uint64_t n) {
+// gocc: _or(a unsafe.Pointer, b unsafe.Pointer, n uint64)
+void _or(uint64_t* a, uint64_t* b, uint64_t n) {
     #pragma clang loop vectorize(enable) interleave(enable)
     for (uint64_t i = 0; i < n; ++i) {
         a[i] |= b[i];
     }
 }
 
-void _xor_avx512(uint64_t* a, uint64_t* b, uint64_t n) {
+// gocc: _xor(a unsafe.Pointer, b unsafe.Pointer, n uint64)
+void _xor(uint64_t* a, uint64_t* b, uint64_t n) {
     #pragma clang loop vectorize(enable) interleave(enable)
     for (uint64_t i = 0; i < n; ++i) {
         a[i] ^= b[i];
     }
 }
 
-void _and_many_avx512(uint64_t* a, uint64_t** b, uint64_t dims) {
+// gocc: _and_many(a unsafe.Pointer, b unsafe.Pointer, dims uint64)
+void _and_many(uint64_t* a, uint64_t** b, uint64_t dims) {
     int64_t n = (dims & 0xffffffff);
     int64_t m = (dims >> 32);
     const int64_t chunk_size = 512;
@@ -52,7 +57,8 @@ void _and_many_avx512(uint64_t* a, uint64_t** b, uint64_t dims) {
     }
 }
 
-void _andn_many_avx512(uint64_t* a, uint64_t** b, uint64_t dims) {
+// gocc: _andn_many(a unsafe.Pointer, b unsafe.Pointer, dims uint64)
+void _andn_many(uint64_t* a, uint64_t** b, uint64_t dims) {
     int64_t n = (dims & 0xffffffff);
     int64_t m = (dims >> 32);
     const int64_t chunk_size = 512;
@@ -73,7 +79,8 @@ void _andn_many_avx512(uint64_t* a, uint64_t** b, uint64_t dims) {
     }
 }
 
-void _or_many_avx512(uint64_t* a, uint64_t** b, uint64_t dims) {
+// gocc: _or_many(a unsafe.Pointer, b unsafe.Pointer, dims uint64)
+void _or_many(uint64_t* a, uint64_t** b, uint64_t dims) {
     int64_t n = (dims & 0xffffffff);
     int64_t m = (dims >> 32);
     const int64_t chunk_size = 512;
@@ -94,7 +101,8 @@ void _or_many_avx512(uint64_t* a, uint64_t** b, uint64_t dims) {
     }
 }
 
-void _xor_many_avx512(uint64_t* a, uint64_t** b, uint64_t dims) {
+// gocc: _xor_many(a unsafe.Pointer, b unsafe.Pointer, dims uint64)
+void _xor_many(uint64_t* a, uint64_t** b, uint64_t dims) {
     int64_t n = (dims & 0xffffffff);
     int64_t m = (dims >> 32);
     const int64_t chunk_size = 512;
@@ -113,4 +121,15 @@ void _xor_many_avx512(uint64_t* a, uint64_t** b, uint64_t dims) {
             }
         }
     }
+}
+
+// gocc: _count(a []uint64) uint64
+uint64_t _count(uint64_t *a, uint64_t a_len, uint64_t a_cap) {
+    uint64_t count = 0;
+
+    for (int i = 0; i < a_len; i++) {
+        count += __builtin_popcountll(a[i]);
+    }
+
+    return count;
 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./bin/gocc simd_avx.c    --arch avx2   -O1 --package bitmap -o ../ 
-./bin/gocc simd_avx512.c --arch avx512 -O3 --package bitmap -o ../
-./bin/gocc simd_neon.c   --arch neon   -O3 --package bitmap -o ../
-./bin/gocc simd_apple.c  --arch apple  -O3 --package bitmap -o ../
+./bin/gocc -l -o ../ --package bitmap simd.c --arch avx2   -O1 -s _avx
+./bin/gocc -l -o ../ --package bitmap simd.c --arch avx512 -O3 -s _avx512 --function-suffix _avx512
+./bin/gocc -l -o ../ --package bitmap simd.c --arch arm64 -O3 -s _arm64
+#./bin/gocc -l -o ../ --package bitmap simd.c --arch sve -O3 -s _arm64_sve --function-suffix _sve
