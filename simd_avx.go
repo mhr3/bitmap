@@ -6,16 +6,16 @@ package bitmap
 import "unsafe"
 
 //go:noescape
-func _and(a unsafe.Pointer, b unsafe.Pointer, n uint64)
+func _and(a []uint64, b []uint64)
 
 //go:noescape
-func _andn(a unsafe.Pointer, b unsafe.Pointer, n uint64)
+func _andn(a []uint64, b []uint64)
 
 //go:noescape
-func _or(a unsafe.Pointer, b unsafe.Pointer, n uint64)
+func _or(a []uint64, b []uint64)
 
 //go:noescape
-func _xor(a unsafe.Pointer, b unsafe.Pointer, n uint64)
+func _xor(a []uint64, b []uint64)
 
 //go:noescape
 func _and_many(a unsafe.Pointer, b unsafe.Pointer, dims uint64)

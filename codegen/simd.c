@@ -3,32 +3,36 @@
 
 #include <stdint.h>
 
-// gocc: _and(a unsafe.Pointer, b unsafe.Pointer, n uint64)
-void _and(uint64_t* a, uint64_t* b, uint64_t n) {
+// gocc: _and(a, b []uint64)
+void _and(uint64_t* a, uint64_t a_len, uint64_t a_cap, uint64_t* b, uint64_t b_len, uint64_t b_cap) {
+    uint64_t n = a_len < b_len ? a_len : b_len;
     #pragma clang loop vectorize(enable)
     for (uint64_t i = 0; i < n; ++i) {
         a[i] &= b[i];
     }
 }
 
-// gocc: _andn(a unsafe.Pointer, b unsafe.Pointer, n uint64)
-void _andn(uint64_t* a, uint64_t* b, uint64_t n) {
+// gocc: _andn(a, b []uint64)
+void _andn(uint64_t* a, uint64_t a_len, uint64_t a_cap, uint64_t* b, uint64_t b_len, uint64_t b_cap) {
+    uint64_t n = a_len < b_len ? a_len : b_len;
     #pragma clang loop vectorize(enable) interleave(enable)
     for (uint64_t i = 0; i < n; ++i) {
         a[i] &= ~b[i];
     }
 }
 
-// gocc: _or(a unsafe.Pointer, b unsafe.Pointer, n uint64)
-void _or(uint64_t* a, uint64_t* b, uint64_t n) {
+// gocc: _or(a, b []uint64)
+void _or(uint64_t* a, uint64_t a_len, uint64_t a_cap, uint64_t* b, uint64_t b_len, uint64_t b_cap) {
+    uint64_t n = a_len < b_len ? a_len : b_len;
     #pragma clang loop vectorize(enable) interleave(enable)
     for (uint64_t i = 0; i < n; ++i) {
         a[i] |= b[i];
     }
 }
 
-// gocc: _xor(a unsafe.Pointer, b unsafe.Pointer, n uint64)
-void _xor(uint64_t* a, uint64_t* b, uint64_t n) {
+// gocc: _xor(a, b []uint64)
+void _xor(uint64_t* a, uint64_t a_len, uint64_t a_cap, uint64_t* b, uint64_t b_len, uint64_t b_cap) {
+    uint64_t n = a_len < b_len ? a_len : b_len;
     #pragma clang loop vectorize(enable) interleave(enable)
     for (uint64_t i = 0; i < n; ++i) {
         a[i] ^= b[i];

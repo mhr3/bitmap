@@ -19,7 +19,7 @@ func (dst *Bitmap) And(other Bitmap, extra ...Bitmap) {
 	case isAccelerated:
 		switch len(extra) {
 		case 0:
-			_and(unsafe.Pointer(&(*dst)[0]), unsafe.Pointer(&other[0]), uint64(max))
+			_and(*dst, other)
 		default:
 			vx, _ := pointersOf(other, extra)
 			_and_many(unsafe.Pointer(&(*dst)[0]), vx, dimensionsOf(max, len(extra)+1))
@@ -42,7 +42,7 @@ func (dst *Bitmap) AndNot(other Bitmap, extra ...Bitmap) {
 	case isAccelerated:
 		switch len(extra) {
 		case 0:
-			_andn(unsafe.Pointer(&(*dst)[0]), unsafe.Pointer(&other[0]), uint64(max))
+			_andn(*dst, other)
 		default:
 			vx, _ := pointersOf(other, extra)
 			_andn_many(unsafe.Pointer(&(*dst)[0]), vx, dimensionsOf(max, len(extra)+1))
@@ -65,7 +65,7 @@ func (dst *Bitmap) Or(other Bitmap, extra ...Bitmap) {
 	case isAccelerated:
 		switch len(extra) {
 		case 0:
-			_or(unsafe.Pointer(&(*dst)[0]), unsafe.Pointer(&other[0]), uint64(len(other)))
+			_or(*dst, other)
 		default:
 			vx, max := pointersOf(other, extra)
 			_or_many(unsafe.Pointer(&(*dst)[0]), vx, dimensionsOf(max, len(extra)+1))
@@ -87,7 +87,7 @@ func (dst *Bitmap) Xor(other Bitmap, extra ...Bitmap) {
 	case isAccelerated:
 		switch len(extra) {
 		case 0:
-			_xor(unsafe.Pointer(&(*dst)[0]), unsafe.Pointer(&other[0]), uint64(len(other)))
+			_xor(*dst, other)
 		default:
 			vx, max := pointersOf(other, extra)
 			_xor_many(unsafe.Pointer(&(*dst)[0]), vx, dimensionsOf(max, len(extra)+1))
