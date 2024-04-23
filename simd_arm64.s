@@ -255,17 +255,17 @@ LBB3_9:
 	BEQ  LBB3_7        // <--                                  // b.eq	.LBB3_7
 	JMP  LBB3_5        // <--                                  // b	.LBB3_5
 
-TEXT ·_and_many(SB), NOSPLIT, $0-24
+TEXT ·_and_many(SB), 0, $80-24
 	MOVD a+0(FP), R0
 	MOVD b+8(FP), R1
 	MOVD dims+16(FP), R2
 	NOP                      // (skipped)                            // stp	x29, x30, [sp, #-80]!
 	ANDS $4294967295, R2, R8 // <--                                  // ands	x8, x2, #0xffffffff
-	NOP                      // (skipped)                            // stp	x26, x25, [sp, #16]
-	NOP                      // (skipped)                            // stp	x24, x23, [sp, #32]
+	STP  (R26, R25), 16(RSP) // <--                                  // stp	x26, x25, [sp, #16]
+	STP  (R24, R23), 32(RSP) // <--                                  // stp	x24, x23, [sp, #32]
 	NOP                      // (skipped)                            // mov	x29, sp
-	NOP                      // (skipped)                            // stp	x22, x21, [sp, #48]
-	NOP                      // (skipped)                            // stp	x20, x19, [sp, #64]
+	STP  (R22, R21), 48(RSP) // <--                                  // stp	x22, x21, [sp, #48]
+	STP  (R20, R19), 64(RSP) // <--                                  // stp	x20, x19, [sp, #64]
 	BEQ  LBB4_18             // <--                                  // b.eq	.LBB4_18
 	LSR  $32, R2, R9         // <--                                  // lsr	x9, x2, #32
 	CBZ  R9, LBB4_18         // <--                                  // cbz	x9, .LBB4_18
@@ -386,24 +386,24 @@ LBB4_17:
 	JMP  LBB4_11       // <--                                  // b	.LBB4_11
 
 LBB4_18:
-	NOP // (skipped)                            // ldp	x20, x19, [sp, #64]
-	NOP // (skipped)                            // ldp	x22, x21, [sp, #48]
-	NOP // (skipped)                            // ldp	x24, x23, [sp, #32]
-	NOP // (skipped)                            // ldp	x26, x25, [sp, #16]
-	NOP // (skipped)                            // ldp	x29, x30, [sp], #80
-	RET // <--                                  // ret
+	LDP 64(RSP), (R20, R19) // <--                                  // ldp	x20, x19, [sp, #64]
+	LDP 48(RSP), (R22, R21) // <--                                  // ldp	x22, x21, [sp, #48]
+	LDP 32(RSP), (R24, R23) // <--                                  // ldp	x24, x23, [sp, #32]
+	LDP 16(RSP), (R26, R25) // <--                                  // ldp	x26, x25, [sp, #16]
+	NOP                     // (skipped)                            // ldp	x29, x30, [sp], #80
+	RET                     // <--                                  // ret
 
-TEXT ·_andn_many(SB), NOSPLIT, $0-24
+TEXT ·_andn_many(SB), 0, $80-24
 	MOVD a+0(FP), R0
 	MOVD b+8(FP), R1
 	MOVD dims+16(FP), R2
 	NOP                      // (skipped)                            // stp	x29, x30, [sp, #-80]!
 	ANDS $4294967295, R2, R8 // <--                                  // ands	x8, x2, #0xffffffff
-	NOP                      // (skipped)                            // stp	x26, x25, [sp, #16]
-	NOP                      // (skipped)                            // stp	x24, x23, [sp, #32]
+	STP  (R26, R25), 16(RSP) // <--                                  // stp	x26, x25, [sp, #16]
+	STP  (R24, R23), 32(RSP) // <--                                  // stp	x24, x23, [sp, #32]
 	NOP                      // (skipped)                            // mov	x29, sp
-	NOP                      // (skipped)                            // stp	x22, x21, [sp, #48]
-	NOP                      // (skipped)                            // stp	x20, x19, [sp, #64]
+	STP  (R22, R21), 48(RSP) // <--                                  // stp	x22, x21, [sp, #48]
+	STP  (R20, R19), 64(RSP) // <--                                  // stp	x20, x19, [sp, #64]
 	BEQ  LBB5_18             // <--                                  // b.eq	.LBB5_18
 	LSR  $32, R2, R9         // <--                                  // lsr	x9, x2, #32
 	CBZ  R9, LBB5_18         // <--                                  // cbz	x9, .LBB5_18
@@ -524,24 +524,24 @@ LBB5_17:
 	JMP  LBB5_11       // <--                                  // b	.LBB5_11
 
 LBB5_18:
-	NOP // (skipped)                            // ldp	x20, x19, [sp, #64]
-	NOP // (skipped)                            // ldp	x22, x21, [sp, #48]
-	NOP // (skipped)                            // ldp	x24, x23, [sp, #32]
-	NOP // (skipped)                            // ldp	x26, x25, [sp, #16]
-	NOP // (skipped)                            // ldp	x29, x30, [sp], #80
-	RET // <--                                  // ret
+	LDP 64(RSP), (R20, R19) // <--                                  // ldp	x20, x19, [sp, #64]
+	LDP 48(RSP), (R22, R21) // <--                                  // ldp	x22, x21, [sp, #48]
+	LDP 32(RSP), (R24, R23) // <--                                  // ldp	x24, x23, [sp, #32]
+	LDP 16(RSP), (R26, R25) // <--                                  // ldp	x26, x25, [sp, #16]
+	NOP                     // (skipped)                            // ldp	x29, x30, [sp], #80
+	RET                     // <--                                  // ret
 
-TEXT ·_or_many(SB), NOSPLIT, $0-24
+TEXT ·_or_many(SB), 0, $80-24
 	MOVD a+0(FP), R0
 	MOVD b+8(FP), R1
 	MOVD dims+16(FP), R2
 	NOP                      // (skipped)                            // stp	x29, x30, [sp, #-80]!
 	ANDS $4294967295, R2, R8 // <--                                  // ands	x8, x2, #0xffffffff
-	NOP                      // (skipped)                            // stp	x26, x25, [sp, #16]
-	NOP                      // (skipped)                            // stp	x24, x23, [sp, #32]
+	STP  (R26, R25), 16(RSP) // <--                                  // stp	x26, x25, [sp, #16]
+	STP  (R24, R23), 32(RSP) // <--                                  // stp	x24, x23, [sp, #32]
 	NOP                      // (skipped)                            // mov	x29, sp
-	NOP                      // (skipped)                            // stp	x22, x21, [sp, #48]
-	NOP                      // (skipped)                            // stp	x20, x19, [sp, #64]
+	STP  (R22, R21), 48(RSP) // <--                                  // stp	x22, x21, [sp, #48]
+	STP  (R20, R19), 64(RSP) // <--                                  // stp	x20, x19, [sp, #64]
 	BEQ  LBB6_18             // <--                                  // b.eq	.LBB6_18
 	LSR  $32, R2, R9         // <--                                  // lsr	x9, x2, #32
 	CBZ  R9, LBB6_18         // <--                                  // cbz	x9, .LBB6_18
@@ -662,24 +662,24 @@ LBB6_17:
 	JMP  LBB6_11       // <--                                  // b	.LBB6_11
 
 LBB6_18:
-	NOP // (skipped)                            // ldp	x20, x19, [sp, #64]
-	NOP // (skipped)                            // ldp	x22, x21, [sp, #48]
-	NOP // (skipped)                            // ldp	x24, x23, [sp, #32]
-	NOP // (skipped)                            // ldp	x26, x25, [sp, #16]
-	NOP // (skipped)                            // ldp	x29, x30, [sp], #80
-	RET // <--                                  // ret
+	LDP 64(RSP), (R20, R19) // <--                                  // ldp	x20, x19, [sp, #64]
+	LDP 48(RSP), (R22, R21) // <--                                  // ldp	x22, x21, [sp, #48]
+	LDP 32(RSP), (R24, R23) // <--                                  // ldp	x24, x23, [sp, #32]
+	LDP 16(RSP), (R26, R25) // <--                                  // ldp	x26, x25, [sp, #16]
+	NOP                     // (skipped)                            // ldp	x29, x30, [sp], #80
+	RET                     // <--                                  // ret
 
-TEXT ·_xor_many(SB), NOSPLIT, $0-24
+TEXT ·_xor_many(SB), 0, $80-24
 	MOVD a+0(FP), R0
 	MOVD b+8(FP), R1
 	MOVD dims+16(FP), R2
 	NOP                      // (skipped)                            // stp	x29, x30, [sp, #-80]!
 	ANDS $4294967295, R2, R8 // <--                                  // ands	x8, x2, #0xffffffff
-	NOP                      // (skipped)                            // stp	x26, x25, [sp, #16]
-	NOP                      // (skipped)                            // stp	x24, x23, [sp, #32]
+	STP  (R26, R25), 16(RSP) // <--                                  // stp	x26, x25, [sp, #16]
+	STP  (R24, R23), 32(RSP) // <--                                  // stp	x24, x23, [sp, #32]
 	NOP                      // (skipped)                            // mov	x29, sp
-	NOP                      // (skipped)                            // stp	x22, x21, [sp, #48]
-	NOP                      // (skipped)                            // stp	x20, x19, [sp, #64]
+	STP  (R22, R21), 48(RSP) // <--                                  // stp	x22, x21, [sp, #48]
+	STP  (R20, R19), 64(RSP) // <--                                  // stp	x20, x19, [sp, #64]
 	BEQ  LBB7_18             // <--                                  // b.eq	.LBB7_18
 	LSR  $32, R2, R9         // <--                                  // lsr	x9, x2, #32
 	CBZ  R9, LBB7_18         // <--                                  // cbz	x9, .LBB7_18
@@ -800,12 +800,12 @@ LBB7_17:
 	JMP  LBB7_11       // <--                                  // b	.LBB7_11
 
 LBB7_18:
-	NOP // (skipped)                            // ldp	x20, x19, [sp, #64]
-	NOP // (skipped)                            // ldp	x22, x21, [sp, #48]
-	NOP // (skipped)                            // ldp	x24, x23, [sp, #32]
-	NOP // (skipped)                            // ldp	x26, x25, [sp, #16]
-	NOP // (skipped)                            // ldp	x29, x30, [sp], #80
-	RET // <--                                  // ret
+	LDP 64(RSP), (R20, R19) // <--                                  // ldp	x20, x19, [sp, #64]
+	LDP 48(RSP), (R22, R21) // <--                                  // ldp	x22, x21, [sp, #48]
+	LDP 32(RSP), (R24, R23) // <--                                  // ldp	x24, x23, [sp, #32]
+	LDP 16(RSP), (R26, R25) // <--                                  // ldp	x26, x25, [sp, #16]
+	NOP                     // (skipped)                            // ldp	x29, x30, [sp], #80
+	RET                     // <--                                  // ret
 
 TEXT ·_count(SB), NOSPLIT, $0-32
 	MOVD a+0(FP), R0

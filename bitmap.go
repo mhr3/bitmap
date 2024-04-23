@@ -6,32 +6,7 @@ package bitmap
 import (
 	"math/bits"
 	"unsafe"
-
-	"github.com/klauspost/cpuid/v2"
 )
-
-const (
-	isUnsupported = iota
-	isAccelerated
-	isAVX512
-)
-
-// Hardware contains the resolved acceleration level
-var hardware = levelOf(cpuid.CPU)
-
-// levelOf returns the hardware acceleration level
-func levelOf(cpu cpuid.CPUInfo) int {
-	switch {
-	case cpu.Supports(cpuid.AVX512F) && cpu.Supports(cpuid.AVX512DQ) && cpu.Supports(cpuid.AVX512BW):
-		return isAVX512
-	case cpu.Supports(cpuid.AVX2) && cpu.Supports(cpuid.FMA3):
-		return isAccelerated
-	case cpu.Supports(cpuid.ASIMD):
-		return isAccelerated
-	default:
-		return isUnsupported
-	}
-}
 
 // Bitmap represents a scalar-backed bitmap index
 type Bitmap []uint64

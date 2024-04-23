@@ -11,7 +11,6 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/klauspost/cpuid/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -178,46 +177,5 @@ func TestPointersOf(t *testing.T) {
 		assert.NotNil(t, ptr)
 		assert.NotZero(t, uintptr(ptr))
 		assert.NotZero(t, max)
-	}
-}
-
-func TestLevelOfWithEnabledFeatures(t *testing.T) {
-	testCases := []struct {
-		name       string
-		featureIDs []cpuid.FeatureID
-		expected   int
-	}{
-		{
-			name:       "AVX-512F, AVX-512BW, and AVX-512DQ support",
-			featureIDs: []cpuid.FeatureID{cpuid.AVX512F, cpuid.AVX512BW, cpuid.AVX512DQ},
-			expected:   isAVX512,
-		},
-		{
-			name:       "AVX2 and FMA3 support",
-			featureIDs: []cpuid.FeatureID{cpuid.AVX2, cpuid.FMA3},
-			expected:   isAccelerated,
-		},
-		{
-			name:       "NEON support on ARM64",
-			featureIDs: []cpuid.FeatureID{cpuid.ASIMD},
-			expected:   isAccelerated,
-		},
-		{
-			name:       "Unsupported feature combination",
-			featureIDs: []cpuid.FeatureID{cpuid.SHA3, cpuid.AESARM},
-			expected:   isUnsupported,
-		},
-	}
-
-	for _, tc := range testCases {
-		t.Run(tc.name, func(t *testing.T) {
-			cpu := cpuid.CPUInfo{}
-			for _, feature := range tc.featureIDs {
-				cpu.Enable(feature)
-			}
-
-			level := levelOf(cpu)
-			assert.Equal(t, tc.expected, level, "expected to return %d, but got %d", tc.expected, level)
-		})
 	}
 }

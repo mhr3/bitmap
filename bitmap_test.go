@@ -10,6 +10,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/sys/cpu"
 )
 
 /*
@@ -516,6 +517,12 @@ func TestMaxInteger(t *testing.T) {
 	}
 }
 
+func detectSIMD() {
+	hasAvx2 = cpu.X86.HasAVX2
+	hasAvx512 = cpu.X86.HasAVX512
+	hasNEON = cpu.ARM64.HasASIMD
+}
+
 func TestBatched(t *testing.T) {
 	const bits = 0b0011
 
@@ -535,10 +542,19 @@ func TestBatched(t *testing.T) {
 		},
 	}
 
-	for _, withHw := range []int{isAccelerated, isUnsupported} {
+	defer detectSIMD()
+
+	for _, withHw := range []bool{true, false} {
 		for i, tc := range tests {
-			t.Run(fmt.Sprintf("%v,avx=%v", i, withHw), func(t *testing.T) {
-				hardware = withHw
+			t.Run(fmt.Sprintf("%v,accelerated=%v", i, withHw), func(t *testing.T) {
+				if withHw {
+					detectSIMD()
+				} else {
+					hasAvx2 = false
+					hasAvx512 = false
+					hasNEON = false
+				}
+
 				naive := func(n int) Bitmap {
 					input := Bitmap{bits}
 					tc(input)(Bitmap{bits})
@@ -589,13 +605,7 @@ func TestEmptyXor(t *testing.T) {
 	assert.Equal(t, 0, a.Count())
 }
 
-func TestTruthTables_NoSIMD(t *testing.T) {
-	hardware = isUnsupported
-	testTruthTables(t)
-}
-
-func TestTruthTables_SIMD(t *testing.T) {
-	hardware = isAccelerated
+func TestTruthTables(t *testing.T) {
 	testTruthTables(t)
 }
 

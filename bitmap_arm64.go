@@ -5,7 +5,19 @@
 
 package bitmap
 
-import "unsafe"
+import (
+	"unsafe"
+
+	"golang.org/x/sys/cpu"
+)
+
+var (
+	hasNEON = cpu.ARM64.HasASIMD
+	hasSVE  = cpu.ARM64.HasSVE
+
+	hasAvx2   = false
+	hasAvx512 = false
+)
 
 // And computes the intersection between two bitmaps and stores the result in the current bitmap
 func (dst *Bitmap) And(other Bitmap, extra ...Bitmap) {
@@ -15,8 +27,16 @@ func (dst *Bitmap) And(other Bitmap, extra ...Bitmap) {
 		return
 	}
 
-	switch hardware {
-	case isAccelerated:
+	switch {
+	case hasSVE:
+		switch len(extra) {
+		case 0:
+			_and_sve(*dst, other)
+		default:
+			vx, _ := pointersOf(other, extra)
+			_and_many_sve(unsafe.Pointer(&(*dst)[0]), vx, dimensionsOf(max, len(extra)+1))
+		}
+	case hasNEON:
 		switch len(extra) {
 		case 0:
 			_and(*dst, other)
@@ -38,8 +58,16 @@ func (dst *Bitmap) AndNot(other Bitmap, extra ...Bitmap) {
 		return
 	}
 
-	switch hardware {
-	case isAccelerated:
+	switch {
+	case hasSVE:
+		switch len(extra) {
+		case 0:
+			_andn_sve(*dst, other)
+		default:
+			vx, _ := pointersOf(other, extra)
+			_andn_many_sve(unsafe.Pointer(&(*dst)[0]), vx, dimensionsOf(max, len(extra)+1))
+		}
+	case hasNEON:
 		switch len(extra) {
 		case 0:
 			_andn(*dst, other)
@@ -59,10 +87,18 @@ func (dst *Bitmap) Or(other Bitmap, extra ...Bitmap) {
 	if max == 0 {
 		return
 	}
-
 	dst.grow(max - 1)
-	switch hardware {
-	case isAccelerated:
+
+	switch {
+	case hasSVE:
+		switch len(extra) {
+		case 0:
+			_or_sve(*dst, other)
+		default:
+			vx, max := pointersOf(other, extra)
+			_or_many_sve(unsafe.Pointer(&(*dst)[0]), vx, dimensionsOf(max, len(extra)+1))
+		}
+	case hasNEON:
 		switch len(extra) {
 		case 0:
 			_or(*dst, other)
@@ -81,10 +117,18 @@ func (dst *Bitmap) Xor(other Bitmap, extra ...Bitmap) {
 	if max == 0 {
 		return
 	}
-
 	dst.grow(max - 1)
-	switch hardware {
-	case isAccelerated:
+
+	switch {
+	case hasSVE:
+		switch len(extra) {
+		case 0:
+			_xor_sve(*dst, other)
+		default:
+			vx, max := pointersOf(other, extra)
+			_xor_many_sve(unsafe.Pointer(&(*dst)[0]), vx, dimensionsOf(max, len(extra)+1))
+		}
+	case hasNEON:
 		switch len(extra) {
 		case 0:
 			_xor(*dst, other)
@@ -103,8 +147,11 @@ func (dst Bitmap) Count() int {
 		return 0
 	}
 
-	switch hardware {
-	case isAccelerated:
+	switch {
+	case hasSVE:
+		res := _count_sve(dst)
+		return int(res)
+	case hasNEON:
 		res := _count(dst)
 		return int(res)
 	default:
